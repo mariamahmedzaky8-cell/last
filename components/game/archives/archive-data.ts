@@ -21,7 +21,7 @@ export const MISSIONS: Mission[] = [
     body: 'Mars',
     image: '/images/archives/insight.png',
     imageAlt: 'Artistic render of a stationary lander with round solar arrays on a flat Martian plain',
-    locked: true,
+    locked: false,
   },
   {
     id: 'opportunity',
@@ -43,7 +43,7 @@ export const MISSIONS: Mission[] = [
     body: 'Moon',
     image: '/images/archives/apollo.png',
     imageAlt: 'Artistic render of a lunar module and an astronaut on the grey lunar surface with Earth in the sky',
-    locked: true,
+    locked: false,
   },
 ]
 

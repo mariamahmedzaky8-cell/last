@@ -114,15 +114,15 @@ function GameExperience() {
   }
 
   return (
-    <div ref={rootRef} data-intro={intro} className="relative h-dvh w-full overflow-hidden bg-navy">
+    <div ref={rootRef} data-intro={intro} className="relative min-h-dvh w-full overflow-x-hidden bg-navy">
       <CinematicEnvironment reducedMotion={settings.reducedMotion} />
 
-      <main className="relative z-10 flex h-full w-full flex-col items-center justify-start overflow-hidden pt-[max(56px,8.5vh)] sm:justify-center sm:pb-[14vh] sm:pt-0">
+      <main className="relative z-10 flex min-h-dvh w-full flex-col items-center justify-start overflow-x-hidden px-3 pt-[max(56px,8.5vh)] pb-24 sm:justify-center sm:px-5 sm:pb-[14vh] sm:pt-0">
         {screen === 'menu' && <MainMenu particlesActive={particlesActive} onSelect={handleSelect} />}
         {screen === 'investigation' && <InvestigationScreen key="investigation" onBack={goToMenu} />}
       </main>
 
-      <HudOverlay />
+      <HudOverlay showMenuFooter={screen === 'menu'} />
 
       {screen === 'archives' && (
         <ArchivesScreen

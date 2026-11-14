@@ -2,6 +2,7 @@
 
 import { useCallback, useId, useSyncExternalStore } from 'react'
 import { cn } from '@/lib/utils'
+import { LANGUAGES } from '@/lib/i18n'
 import { HoloDialog } from './holo-dialog'
 import { useGameSettings } from './settings-provider'
 
@@ -100,16 +101,31 @@ function Switch({
 }
 
 export function SettingsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { settings, update, play } = useGameSettings()
+  const { settings, update, play, t } = useGameSettings()
   const { isFullscreen, supported, toggle } = useFullscreen()
   const volumeId = useId()
   const volumePercent = Math.round(settings.volume * 100)
 
   return (
-    <HoloDialog open={open} onClose={onClose} eyebrow="SYSTEM CONFIGURATION" title="SETTINGS">
-      <SettingRow label="Sound effects" description="Spacecraft interface audio.">
+    <HoloDialog open={open} onClose={onClose} eyebrow={t('SYSTEM CONFIGURATION')} title={t('SETTINGS')}>
+      <SettingRow label={t('Language')} description={t('Choose your preferred language.')} htmlFor="game-language">
+        <select
+          id="game-language"
+          value={settings.language}
+          onChange={(event) => update({ language: event.target.value as typeof settings.language })}
+          className="max-w-[48%] rounded-lg border border-hud/35 bg-navy px-3 py-2 text-sm text-frost focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hud sm:max-w-[55%]"
+        >
+          {LANGUAGES.map((language) => (
+            <option key={language.code} value={language.code}>
+              {language.native}
+            </option>
+          ))}
+        </select>
+      </SettingRow>
+
+      <SettingRow label={t('Sound effects')} description={t('Spacecraft interface audio.')}>
         <Switch
-          label="Sound effects"
+          label={t('Sound effects')}
           checked={!settings.muted}
           onChange={(on) => {
             update({ muted: !on })
@@ -118,7 +134,7 @@ export function SettingsModal({ open, onClose }: { open: boolean; onClose: () =>
         />
       </SettingRow>
 
-      <SettingRow label="SFX volume" description={`${volumePercent}%`} htmlFor={volumeId}>
+      <SettingRow label={t('SFX volume')} description={`${volumePercent}%`} htmlFor={volumeId}>
         <input
           id={volumeId}
           type="range"
@@ -135,9 +151,9 @@ export function SettingsModal({ open, onClose }: { open: boolean; onClose: () =>
         />
       </SettingRow>
 
-      <SettingRow label="Reduced motion" description="Pauses ambient animation and particles.">
+      <SettingRow label={t('Reduced motion')} description={t('Pauses ambient animation and particles.')}>
         <Switch
-          label="Reduced motion"
+          label={t('Reduced motion')}
           checked={settings.reducedMotion}
           onChange={(value) => {
             update({ reducedMotion: value })
@@ -147,11 +163,11 @@ export function SettingsModal({ open, onClose }: { open: boolean; onClose: () =>
       </SettingRow>
 
       <SettingRow
-        label="Fullscreen"
-        description={supported ? 'Immersive full-screen display.' : 'Unavailable in this view.'}
+        label={t('Fullscreen')}
+        description={supported ? t('Immersive full-screen display.') : t('Unavailable in this view.')}
       >
         <Switch
-          label="Fullscreen"
+          label={t('Fullscreen')}
           checked={isFullscreen}
           disabled={!supported}
           onChange={() => {
@@ -161,7 +177,7 @@ export function SettingsModal({ open, onClose }: { open: boolean; onClose: () =>
         />
       </SettingRow>
 
-      <p className="mt-4 text-xs text-frost/50">Preferences are saved on this device.</p>
+      <p className="mt-4 text-xs text-frost/50">{t('Preferences are saved on this device.')}</p>
     </HoloDialog>
   )
 }

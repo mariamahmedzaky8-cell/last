@@ -23,12 +23,13 @@ type ArchivesScreenProps = {
 }
 
 export function ArchivesScreen({ onBack, onBeginInvestigation }: ArchivesScreenProps) {
-  const { settings, play } = useGameSettings()
+  const { settings, play, t } = useGameSettings()
   const calm = settings.reducedMotion
   const [intro, setIntro] = useState(!calm)
   const [view, setView] = useState<View>('select')
   const [focus, setFocus] = useState(false)
   const [section, setSection] = useState<SectionId | null>(null)
+  const [selectedMissionId, setSelectedMissionId] = useState<(typeof MISSIONS)[number]['id']>('opportunity')
   const [mobileIndex, setMobileIndex] = useState(1)
   const focusTimer = useRef<number>(0)
 
@@ -82,7 +83,7 @@ export function ArchivesScreen({ onBack, onBeginInvestigation }: ArchivesScreenP
       data-skip={skip || calm}
       data-focus={focus}
       data-view={view}
-      aria-label="Mission Archives"
+      aria-label={t('Mission Archives')}
       role="region"
     >
       <div className="arc-camera absolute inset-0">
@@ -98,12 +99,12 @@ export function ArchivesScreen({ onBack, onBeginInvestigation }: ArchivesScreenP
 
             <header className="flex flex-col items-center px-4 pt-[clamp(4px,1.5vh,16px)] text-center">
               <h1 className="arc-title font-display text-[clamp(20px,5.2vh,58px)] uppercase leading-none text-frost [text-shadow:0_0_30px_rgba(255,154,61,0.35)]">
-                Mission Archives
+                {t('Mission Archives')}
               </h1>
               <div className="mt-[clamp(6px,1.4vh,14px)] flex w-full max-w-3xl items-center gap-4">
                 <span className="arc-line h-px flex-1 origin-right bg-gradient-to-l from-hud/70 to-transparent" />
                 <p className="arc-rise text-[clamp(8px,1.35vh,12px)] font-semibold tracking-[0.3em] text-hud uppercase" style={{ '--d': '3.4s' } as React.CSSProperties}>
-                  Explore recorded missions, findings, and final transmissions
+                  {t('Explore recorded missions, findings, and final transmissions')}
                 </p>
                 <span className="arc-line h-px flex-1 origin-left bg-gradient-to-r from-hud/70 to-transparent" />
               </div>
@@ -123,6 +124,7 @@ export function ArchivesScreen({ onBack, onBeginInvestigation }: ArchivesScreenP
                     baseRotate={rotate}
                     onBegin={() => {
                       play('archives')
+                      setSelectedMissionId(m.id)
                       openDossier()
                     }}
                     className={cn(
@@ -145,6 +147,7 @@ export function ArchivesScreen({ onBack, onBeginInvestigation }: ArchivesScreenP
         <div className="absolute inset-0 z-20 flex p-3 sm:p-6 lg:p-10">
           {view === 'dossier' && (
             <MissionDossier
+              missionId={selectedMissionId}
               onBack={backToSelect}
               onExplore={() => setView('archive')}
               onBegin={onBeginInvestigation}
@@ -173,14 +176,11 @@ export function ArchivesScreen({ onBack, onBeginInvestigation }: ArchivesScreenP
 }
 
 function ArchiveTopBar() {
+  const { t } = useGameSettings()
   return (
     <div className="arc-rise flex items-start justify-between px-[clamp(14px,2.5vw,36px)] pt-[clamp(10px,2.4vh,26px)]" style={{ '--d': '3.6s' } as React.CSSProperties}>
       <div className="border-l border-t border-hud/40 pl-3 pt-2">
-        <p className="text-[clamp(9px,1.4vh,13px)] font-semibold tracking-[0.3em] text-frost">OUTPOST M-07</p>
-        <p className="mt-1 hidden text-[9px] tracking-[0.3em] text-hud sm:block">
-          <span className="arc-blink mr-1.5 inline-block size-1.5 rounded-full bg-hud align-middle" />
-          MARS INVESTIGATION · ARCHIVES
-        </p>
+        <p className="text-[clamp(9px,1.4vh,13px)] font-semibold tracking-[0.3em] text-frost">{t('MARS INVESTIGATION · ONLINE')}</p>
       </div>
       <div className="hidden flex-col items-center md:flex">
         <p className="text-[9px] tracking-[0.5em] text-frost/60">THE</p>
@@ -196,24 +196,24 @@ function ArchiveTopBar() {
             />
           ))}
         </div>
-        <p className="mt-1.5 text-[9px] tracking-[0.3em] text-hud">SIGNAL LOCK · SIMULATED</p>
+        <p className="mt-1.5 text-[9px] tracking-[0.3em] text-hud">{t('SIGNAL LOCK · SIMULATED')}</p>
       </div>
     </div>
   )
 }
 
 function MobileSwitcher({ index, onChange }: { index: number; onChange: (i: number) => void }) {
-  const { play } = useGameSettings()
+  const { play, t } = useGameSettings()
   const go = (dir: number) => {
     play('click')
     onChange((index + dir + MISSIONS.length) % MISSIONS.length)
   }
   return (
     <div className="arc-rise -mt-6 mb-3 flex items-center justify-center gap-3 md:hidden" style={{ '--d': '3.5s' } as React.CSSProperties}>
-      <button type="button" aria-label="Previous mission" onClick={() => go(-1)} className="flex size-9 items-center justify-center rounded-full border border-hud/40 bg-navy/60 text-frost focus-visible:outline-2 focus-visible:outline-hud">
+      <button type="button" aria-label={t('Previous mission')} onClick={() => go(-1)} className="flex size-9 items-center justify-center rounded-full border border-hud/40 bg-navy/60 text-frost focus-visible:outline-2 focus-visible:outline-hud">
         <ChevronLeft aria-hidden className="size-4" />
       </button>
-      <div className="flex gap-2" role="tablist" aria-label="Missions">
+      <div className="flex gap-2" role="tablist" aria-label={t('Missions')}>
         {MISSIONS.map((m, i) => (
           <button
             key={m.id}
@@ -226,7 +226,7 @@ function MobileSwitcher({ index, onChange }: { index: number; onChange: (i: numb
           />
         ))}
       </div>
-      <button type="button" aria-label="Next mission" onClick={() => go(1)} className="flex size-9 items-center justify-center rounded-full border border-hud/40 bg-navy/60 text-frost focus-visible:outline-2 focus-visible:outline-hud">
+      <button type="button" aria-label={t('Next mission')} onClick={() => go(1)} className="flex size-9 items-center justify-center rounded-full border border-hud/40 bg-navy/60 text-frost focus-visible:outline-2 focus-visible:outline-hud">
         <ChevronRight aria-hidden className="size-4" />
       </button>
     </div>
@@ -234,6 +234,7 @@ function MobileSwitcher({ index, onChange }: { index: number; onChange: (i: numb
 }
 
 function ArchiveBottomBar({ onBack }: { onBack: () => void }) {
+  const { t } = useGameSettings()
   return (
     <div
       className="arc-rise mx-[clamp(10px,1.6vw,28px)] mb-[clamp(10px,2vh,24px)] flex items-center justify-between gap-4 rounded-sm border border-hud/30 bg-[#060c14]/75 px-[clamp(12px,2.5vw,40px)] py-[clamp(8px,1.4vh,14px)] backdrop-blur-md"
@@ -242,12 +243,12 @@ function ArchiveBottomBar({ onBack }: { onBack: () => void }) {
       <div className="hidden min-w-0 items-center gap-4 sm:flex">
         <Database aria-hidden className="size-6 shrink-0 text-hud" />
         <div className="min-w-0">
-          <p className="text-[11px] font-semibold tracking-[0.3em] text-frost">ARCHIVE VAULT</p>
-          <p className="truncate text-[9px] tracking-[0.24em] text-hud/80">RECORDED MISSIONS · SCIENTIFIC DATA · FIELD LOGS</p>
+          <p className="text-[11px] font-semibold tracking-[0.3em] text-frost">{t('ARCHIVE VAULT')}</p>
+          <p className="truncate text-[9px] tracking-[0.24em] text-hud/80">{t('RECORDED MISSIONS · SCIENTIFIC DATA · FIELD LOGS')}</p>
         </div>
       </div>
       <OrbitalCapsuleButton
-        label="Back to Main Menu"
+        label={t('Back to Main Menu')}
         sound="back"
         width="min(80vw, 320px)"
         height="clamp(40px, 6vh, 50px)"
@@ -262,8 +263,8 @@ function ArchiveBottomBar({ onBack }: { onBack: () => void }) {
           ))}
         </div>
         <div>
-          <p className="text-[11px] font-semibold tracking-[0.3em] text-frost">ARCHIVE STATUS</p>
-          <p className="text-[9px] tracking-[0.24em] text-hud/80">1 / 3 AVAILABLE</p>
+          <p className="text-[11px] font-semibold tracking-[0.3em] text-frost">{t('ARCHIVE STATUS')}</p>
+          <p className="text-[9px] tracking-[0.24em] text-hud/80">{t('3 / 3 AVAILABLE')}</p>
         </div>
       </div>
     </div>
