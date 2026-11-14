@@ -177,11 +177,7 @@ function ArchiveTopBar() {
   return (
     <div className="arc-rise flex items-start justify-between px-[clamp(14px,2.5vw,36px)] pt-[clamp(10px,2.4vh,26px)]" style={{ '--d': '3.6s' } as React.CSSProperties}>
       <div className="border-l border-t border-hud/40 pl-3 pt-2">
-        <p className="text-[clamp(9px,1.4vh,13px)] font-semibold tracking-[0.3em] text-frost">OUTPOST M-07</p>
-        <p className="mt-1 hidden text-[9px] tracking-[0.3em] text-hud sm:block">
-          <span className="arc-blink mr-1.5 inline-block size-1.5 rounded-full bg-hud align-middle" />
-          {t('MARS INVESTIGATION · ARCHIVES')}
-        </p>
+        <p className="text-[clamp(9px,1.4vh,13px)] font-semibold tracking-[0.3em] text-frost">{t('MARS INVESTIGATION · ONLINE')}</p>
       </div>
       <div className="hidden flex-col items-center md:flex">
         <p className="text-[9px] tracking-[0.5em] text-frost/60">THE</p>

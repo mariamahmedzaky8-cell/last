@@ -13,7 +13,7 @@ export type GameSettings = {
 
 const STORAGE_KEY = 'last-signal:settings:v1'
 const DEFAULTS: GameSettings = { muted: false, volume: 0.7, reducedMotion: false, language: 'en' }
-const LANGUAGES: Language[] = ['en', 'ar', 'de', 'ru', 'it', 'es', 'fr']
+const LANGUAGES: Language[] = ['en', 'ar']
 
 type SettingsContextValue = {
   settings: GameSettings

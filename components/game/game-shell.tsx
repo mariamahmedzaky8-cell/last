@@ -122,7 +122,7 @@ function GameExperience() {
         {screen === 'investigation' && <InvestigationScreen key="investigation" onBack={goToMenu} />}
       </main>
 
-      <HudOverlay />
+      <HudOverlay showMenuFooter={screen === 'menu'} />
 
       {screen === 'archives' && (
         <ArchivesScreen

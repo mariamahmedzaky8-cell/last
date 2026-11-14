@@ -15,7 +15,7 @@ const CORNERS = [
   'bottom-3 right-3 border-b border-r sm:bottom-5 sm:right-5',
 ]
 
-export function HudOverlay() {
+export function HudOverlay({ showMenuFooter }: { showMenuFooter: boolean }) {
   const { t } = useGameSettings()
 
   return (
@@ -40,6 +40,15 @@ export function HudOverlay() {
         {t('Every mission leaves a story behind.')}
       </p>
 
+      {showMenuFooter && (
+        <p
+          className="intro-el absolute left-7 top-12 max-w-[min(42vw,26rem)] text-[clamp(8px,1vw,10px)] tracking-[0.18em] text-hud/70 sm:left-10 sm:top-16"
+          style={hudIntro('1.18s')}
+        >
+          {t('MARS INVESTIGATION · ONLINE')}
+        </p>
+      )}
+
       <div
         className="intro-el absolute right-7 top-7 flex max-w-[42vw] flex-col items-end gap-1.5 text-right sm:right-10 sm:top-10"
         style={hudIntro('1.25s')}
@@ -55,6 +64,14 @@ export function HudOverlay() {
         <p className="text-[clamp(8px,1vw,10px)] tracking-[0.18em] text-hud/70">{t('SIGNAL LOCK · SIMULATED')}</p>
       </div>
 
+      {showMenuFooter && (
+        <p
+          className="intro-el absolute bottom-7 right-7 max-w-[min(48vw,32rem)] text-right text-[clamp(8px,1vw,10px)] tracking-[0.16em] text-frost/45 sm:bottom-10 sm:right-10"
+          style={hudIntro('1.4s')}
+        >
+          {t('BEYOND THE FINAL SIGNAL, THE STORY REMAINS')}
+        </p>
+      )}
     </div>
   )
 }
