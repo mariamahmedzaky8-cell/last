@@ -29,6 +29,7 @@ export function SourceTag({ kind }: { kind: 'history' | 'fiction' | 'render' }) 
     render: { label: 'Artistic render', cls: 'border-frost/30 text-frost/70' },
   } as const
   const { label, cls } = map[kind]
+  const { t } = useGameSettings()
   return (
     <span
       className={cn(
@@ -36,7 +37,7 @@ export function SourceTag({ kind }: { kind: 'history' | 'fiction' | 'render' }) 
         cls,
       )}
     >
-      {label}
+      {t(label)}
     </span>
   )
 }

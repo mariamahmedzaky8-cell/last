@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef } from 'react'
 import { X } from 'lucide-react'
+import { useGameSettings } from './settings-provider'
 
 type HoloDialogProps = {
   open: boolean
@@ -12,6 +13,7 @@ type HoloDialogProps = {
 }
 
 export function HoloDialog({ open, onClose, eyebrow, title, children }: HoloDialogProps) {
+  const { t } = useGameSettings()
   const ref = useRef<HTMLDialogElement>(null)
   const titleId = useId()
 
@@ -46,7 +48,7 @@ export function HoloDialog({ open, onClose, eyebrow, title, children }: HoloDial
           <button
             type="button"
             onClick={() => ref.current?.close()}
-            aria-label="Close"
+            aria-label={t('Close')}
             className="rounded-full border border-hud/30 p-2 text-frost/80 transition-colors hover:border-hud/70 hover:text-frost focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hud"
           >
             <X aria-hidden className="size-4" />

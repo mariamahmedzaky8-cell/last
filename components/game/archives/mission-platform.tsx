@@ -19,7 +19,7 @@ type MissionPlatformProps = {
 }
 
 export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm, className, onBegin }: MissionPlatformProps) {
-  const { play } = useGameSettings()
+  const { play, t } = useGameSettings()
   const cardRef = useRef<HTMLDivElement>(null)
   const [hot, setHot] = useState(false)
   const tone = primary ? '#ff9a3d' : '#49d7ff'
@@ -74,7 +74,7 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
                 primary ? 'text-ember' : 'text-frost/60',
               )}
             >
-              {mission.index}
+              {t(mission.index)}
             </p>
             <h3
               id={`mission-${mission.id}`}
@@ -114,11 +114,11 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
             {primary ? (
               <>
                 <p className="mt-[clamp(8px,1.6vh,14px)] line-clamp-3 text-pretty text-[clamp(11px,1.65vh,14px)] leading-relaxed text-frost/85 [@media(max-height:640px)]:line-clamp-2">
-                  {mission.blurb}
+                  {t(mission.blurb ?? '')}
                 </p>
                 <div className="mt-[clamp(10px,1.8vh,18px)] flex justify-center">
                   <OrbitalCapsuleButton
-                    label="Begin Mission"
+                    label={t('Begin Mission')}
                     tone="amber"
                     emphasis="primary"
                     sound="start"
@@ -139,7 +139,7 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
                   <span className="h-px flex-1 bg-gradient-to-l from-transparent to-hud/40" />
                 </div>
                 <p className="text-[clamp(9px,1.3vh,11px)] font-semibold tracking-[0.34em] text-frost/70">
-                  COMING SOON
+                  {t('COMING SOON')}
                 </p>
               </div>
             )}

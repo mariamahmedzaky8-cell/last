@@ -5,6 +5,7 @@ import type { SoundName } from '@/lib/audio'
 import { GameTitle } from './game-title'
 import { OrbitalCapsuleButton } from './orbital-capsule-button'
 import { OrbitalRing } from './orbital-ring'
+import { useGameSettings } from './settings-provider'
 
 export type MenuAction = 'start' | 'archives' | 'settings' | 'about'
 
@@ -71,6 +72,7 @@ type MainMenuProps = {
 }
 
 export function MainMenu({ particlesActive, onSelect }: MainMenuProps) {
+  const { t } = useGameSettings()
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
     const buttons = Array.from(
@@ -89,7 +91,7 @@ export function MainMenu({ particlesActive, onSelect }: MainMenuProps) {
 
       <GameTitle />
 
-      <nav aria-label="Main menu" onKeyDown={handleKeyDown} className="mt-[4.4vh]">
+      <nav aria-label={t('Main menu')} onKeyDown={handleKeyDown} className="mt-[clamp(12px,4.4vh,44px)]">
         <ul className="flex flex-col items-center gap-[clamp(12px,2.6vh,26px)]">
           {ITEMS.map((item, i) => (
             <li
@@ -104,7 +106,7 @@ export function MainMenu({ particlesActive, onSelect }: MainMenuProps) {
             >
               <OrbitalCapsuleButton
                 data-menu-item
-                label={item.label}
+                label={t(item.label)}
                 tone={item.tone}
                 emphasis={item.emphasis}
                 sound={item.sound}

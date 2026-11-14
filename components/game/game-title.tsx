@@ -1,10 +1,12 @@
 import type { CSSProperties } from 'react'
 import { SignalWaveform } from './signal-waveform'
+import { useGameSettings } from './settings-provider'
 
 const intro = (delay: string, anim = 'intro-rise', dur = '0.9s') =>
   ({ '--intro-delay': delay, '--intro-anim': anim, '--intro-dur': dur }) as CSSProperties
 
 export function GameTitle() {
+  const { t } = useGameSettings()
   return (
     <div className="relative flex flex-col items-center text-center">
       <h1 className="flex flex-col items-center">
@@ -30,7 +32,7 @@ export function GameTitle() {
       >
         <span aria-hidden className="h-px w-8 bg-gradient-to-r from-transparent to-hud/80 sm:w-20" />
         <p className="font-sans text-[clamp(13px,2.4vh,26px)] font-light italic tracking-[0.42em] text-frost/90 [text-shadow:0_1px_8px_rgba(8,17,27,0.8)]">
-          Echoes of Exploration.
+          {t('Echoes of Exploration.')}
         </p>
         <span aria-hidden className="h-px w-8 bg-gradient-to-l from-transparent to-hud/80 sm:w-20" />
       </div>

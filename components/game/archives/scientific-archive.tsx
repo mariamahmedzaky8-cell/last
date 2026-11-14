@@ -31,7 +31,7 @@ type ScientificArchiveProps = {
 }
 
 export function ScientificArchive({ section, onSection, onBack }: ScientificArchiveProps) {
-  const { play } = useGameSettings()
+  const { play, t } = useGameSettings()
   const headingRef = useRef<HTMLHeadingElement>(null)
   useEffect(() => headingRef.current?.focus(), [section])
 
@@ -44,19 +44,19 @@ export function ScientificArchive({ section, onSection, onBack }: ScientificArch
       style={{ '--tone': '#49d7ff' } as React.CSSProperties}
     >
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-hud/20 px-5 py-3 sm:px-7">
-        <BackChip label={section ? 'Archive index' : 'Dossier'} onClick={() => (section ? onSection(null) : onBack())} />
+        <BackChip label={t(section ? 'Archive index' : 'Dossier')} onClick={() => (section ? onSection(null) : onBack())} />
         <h2
           id="sci-title"
           ref={headingRef}
           tabIndex={-1}
           className="text-[10px] font-semibold tracking-[0.32em] text-hud uppercase outline-none"
         >
-          Opportunity · {current ? current.label : 'Scientific archive'}
+          Opportunity · {current ? t(current.label) : t('Scientific archive')}
         </h2>
       </header>
 
       {section && (
-        <nav aria-label="Archive sections" className="arc-scroll flex gap-2 overflow-x-auto border-b border-hud/10 px-5 py-2.5 sm:px-7">
+        <nav aria-label={t('Archive sections')} className="arc-scroll flex gap-2 overflow-x-auto border-b border-hud/10 px-5 py-2.5 sm:px-7">
           {SECTIONS.map((s) => (
             <button
               key={s.id}
@@ -74,7 +74,7 @@ export function ScientificArchive({ section, onSection, onBack }: ScientificArch
               )}
             >
               <s.icon aria-hidden className="size-3.5" />
-              {s.label}
+              {t(s.label)}
             </button>
           ))}
         </nav>
@@ -97,8 +97,8 @@ export function ScientificArchive({ section, onSection, onBack }: ScientificArch
                   <span aria-hidden className="absolute -right-10 -top-10 size-36 rounded-full bg-hud/10 blur-2xl transition-opacity duration-500 group-hover:bg-hud/20" />
                   <s.icon aria-hidden className="size-6 text-hud" />
                   <span className="mt-6">
-                    <span className="block font-display text-lg tracking-[0.08em] text-frost">{s.label}</span>
-                    <span className="mt-1 block text-xs tracking-[0.12em] text-frost/60">{s.desc}</span>
+                    <span className="block font-display text-lg tracking-[0.08em] text-frost">{t(s.label)}</span>
+                    <span className="mt-1 block text-xs tracking-[0.12em] text-frost/60">{t(s.desc)}</span>
                   </span>
                 </button>
               </li>
@@ -121,21 +121,22 @@ function Unavailable({ children }: { children: React.ReactNode }) {
 }
 
 function MediaSection() {
+  const { t } = useGameSettings()
   const [index, setIndex] = useState(0)
   const item = MEDIA[index]
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
       <figure className="flex flex-col gap-3">
         <div key={item.src} className="arc-swap relative aspect-video overflow-hidden rounded-2xl border border-hud/25">
-          <Image src={item.src} alt={item.caption} fill sizes="(min-width: 1024px) 700px, 90vw" className="object-cover" />
+          <Image src={item.src} alt={t(item.caption)} fill sizes="(min-width: 1024px) 700px, 90vw" className="object-cover" />
         </div>
         <figcaption className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-semibold tracking-[0.06em] text-frost">{item.title}</span>
+            <span className="font-semibold tracking-[0.06em] text-frost">{t(item.title)}</span>
             <SourceTag kind={item.credit.startsWith('Artistic') ? 'render' : 'fiction'} />
           </div>
-          <span className="text-sm text-frost/70">{item.caption}</span>
-          <span className="text-xs text-frost/45">{item.credit}</span>
+          <span className="text-sm text-frost/70">{t(item.caption)}</span>
+          <span className="text-xs text-frost/45">{t(item.credit)}</span>
         </figcaption>
       </figure>
       <div className="flex flex-col gap-3">
@@ -167,11 +168,12 @@ function MediaSection() {
 }
 
 function SignalSection() {
+  const { t } = useGameSettings()
   const [id, setId] = useState(SIGNAL_LOGS[0].id)
   const log = SIGNAL_LOGS.find((l) => l.id === id) ?? SIGNAL_LOGS[0]
   return (
     <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
-      <ol className="relative flex flex-col gap-1 border-l border-hud/25 pl-4" aria-label="Signal records">
+      <ol className="relative flex flex-col gap-1 border-l border-hud/25 pl-4" aria-label={t('Signal records')}>
         {SIGNAL_LOGS.map((l) => (
           <li key={l.id}>
             <button
@@ -192,7 +194,7 @@ function SignalSection() {
                 )}
               />
               <span className="block font-mono text-[10px] tracking-[0.18em] text-frost/50">{l.stamp}</span>
-              <span className="block text-sm font-semibold text-frost">{l.title}</span>
+              <span className="block text-sm font-semibold text-frost">{t(l.title)}</span>
             </button>
           </li>
         ))}
@@ -202,8 +204,8 @@ function SignalSection() {
           <span className="font-mono text-xs tracking-[0.18em] text-hud">{log.stamp}</span>
           <SourceTag kind={log.kind} />
         </div>
-        <h3 className="font-display text-xl tracking-[0.06em] text-frost">{log.title}</h3>
-        <p className="text-sm leading-relaxed text-frost/80">{log.body}</p>
+        <h3 className="font-display text-xl tracking-[0.06em] text-frost">{t(log.title)}</h3>
+        <p className="text-sm leading-relaxed text-frost/80">{t(log.body)}</p>
         <div aria-hidden className="mt-auto flex h-10 items-end gap-[3px] pt-4">
           {Array.from({ length: 40 }, (_, i) => (
             <span
@@ -214,7 +216,7 @@ function SignalSection() {
           ))}
         </div>
         <p className="text-[11px] text-frost/45">
-          Waveform is decorative. Original transmission data and audio are not included.
+          {t('Waveform is decorative. Original transmission data and audio are not included.')}
         </p>
       </article>
     </div>
@@ -222,42 +224,41 @@ function SignalSection() {
 }
 
 function NotesSection() {
+  const { t } = useGameSettings()
   return (
     <div className="flex flex-col gap-6">
       <section className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
-          <h3 className="text-[11px] font-semibold uppercase tracking-[0.3em] text-hud">Key observation</h3>
+          <h3 className="text-[11px] font-semibold uppercase tracking-[0.3em] text-hud">{t('Key observation')}</h3>
           <SourceTag kind="history" />
         </div>
         <p className="max-w-3xl text-pretty text-sm leading-relaxed text-frost/80">
-          Near its landing site, Opportunity found small hematite-rich spherules, nicknamed “blueberries,” embedded in
-          layered sedimentary rock. Together with other mineral evidence, they indicated that liquid water was once
-          present at Meridiani Planum.
+          {t('Near its landing site, Opportunity found small hematite-rich spherules, nicknamed “blueberries,” embedded in layered sedimentary rock. Together with other mineral evidence, they indicated that liquid water was once present at Meridiani Planum.')}
         </p>
       </section>
       <section className="flex flex-col gap-3">
-        <h3 className="text-[11px] font-semibold uppercase tracking-[0.3em] text-hud">Instrument suite</h3>
+        <h3 className="text-[11px] font-semibold uppercase tracking-[0.3em] text-hud">{t('Instrument suite')}</h3>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {OPPORTUNITY_INSTRUMENTS.map((i) => (
             <li key={i.name} className="rounded-xl border border-hud/15 bg-midnight/50 p-4">
               <p className="font-semibold text-frost">{i.name}</p>
-              <p className="mt-1 text-xs leading-relaxed text-frost/65">{i.detail}</p>
+              <p className="mt-1 text-xs leading-relaxed text-frost/65">{t(i.detail)}</p>
             </li>
           ))}
         </ul>
       </section>
       <section className="flex flex-col gap-3">
-        <h3 className="text-[11px] font-semibold uppercase tracking-[0.3em] text-hud">Research goals</h3>
+        <h3 className="text-[11px] font-semibold uppercase tracking-[0.3em] text-hud">{t('Research goals')}</h3>
         <ul className="grid gap-2 sm:grid-cols-2">
           {OPPORTUNITY_OBJECTIVES.map((o) => (
             <li key={o} className="flex gap-3 text-sm text-frost/80">
               <span aria-hidden className="mt-2 size-1.5 shrink-0 rounded-full bg-hud" />
-              {o}
+              {t(o)}
             </li>
           ))}
         </ul>
       </section>
-      <Unavailable>Raw instrument readings and spectra are not included in this build.</Unavailable>
+      <Unavailable>{t('Raw instrument readings and spectra are not included in this build.')}</Unavailable>
     </div>
   )
 }
@@ -272,6 +273,7 @@ const ROUTE = [
 ]
 
 function TraverseSection() {
+  const { t } = useGameSettings()
   const [active, setActive] = useState(0)
   const stop = TRAVERSE[active]
   const d = ROUTE.map((p, i) => `${i ? 'L' : 'M'} ${p.x} ${p.y}`).join(' ')
@@ -279,7 +281,7 @@ function TraverseSection() {
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
       <div className="flex flex-col gap-2">
         <div className="relative overflow-hidden rounded-2xl border border-hud/25 bg-[radial-gradient(circle_at_30%_30%,rgba(255,154,61,0.12),transparent_60%),#0a1420]">
-          <svg viewBox="0 0 360 260" className="block w-full" role="group" aria-label="Schematic traverse route">
+          <svg viewBox="0 0 360 260" className="block w-full" role="group" aria-label={t('Schematic traverse route')}>
             <defs>
               <pattern id="arc-grid" width="20" height="20" patternUnits="userSpaceOnUse">
                 <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(73,215,255,0.08)" strokeWidth="1" />
@@ -293,7 +295,7 @@ function TraverseSection() {
                 key={i}
                 role="button"
                 tabIndex={0}
-                aria-label={TRAVERSE[i].site}
+                aria-label={t(TRAVERSE[i].site)}
                 aria-pressed={i === active}
                 onClick={() => setActive(i)}
                 onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), setActive(i))}
@@ -302,13 +304,13 @@ function TraverseSection() {
                 <circle cx={p.x} cy={p.y} r={i === active ? 9 : 6} fill="rgba(73,215,255,0.15)" stroke="#49d7ff" strokeWidth="1.2" />
                 <circle cx={p.x} cy={p.y} r="2.5" fill={i === active ? '#fff3de' : '#49d7ff'} />
                 <text x={p.x + 12} y={p.y + 4} fill="rgba(234,244,255,0.75)" fontSize="9" letterSpacing="1">
-                  {TRAVERSE[i].site}
+                  {t(TRAVERSE[i].site)}
                 </text>
               </g>
             ))}
           </svg>
         </div>
-        <p className="text-[11px] text-frost/45">Schematic only. Not to scale and not based on orbital mapping data.</p>
+        <p className="text-[11px] text-frost/45">{t('Schematic only. Not to scale and not based on orbital mapping data.')}</p>
       </div>
       <div className="flex flex-col gap-4">
         <article key={active} aria-live="polite" className="arc-swap rounded-2xl border border-hud/20 bg-midnight/50 p-5">
@@ -316,16 +318,16 @@ function TraverseSection() {
             <span className="font-mono text-xs tracking-[0.18em] text-ember">{stop.year}</span>
             <SourceTag kind="history" />
           </div>
-          <h3 className="mt-2 font-display text-xl tracking-[0.06em] text-frost">{stop.site}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-frost/80">{stop.note}</p>
+          <h3 className="mt-2 font-display text-xl tracking-[0.06em] text-frost">{t(stop.site)}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-frost/80">{t(stop.note)}</p>
         </article>
         <dl className="grid grid-cols-2 gap-3">
           <div className="rounded-xl border border-hud/15 bg-midnight/40 p-3">
-            <dt className="text-[9px] uppercase tracking-[0.24em] text-hud/75">Total distance</dt>
+            <dt className="text-[9px] uppercase tracking-[0.24em] text-hud/75">{t('Total distance')}</dt>
             <dd className="mt-1 text-sm font-semibold text-frost">{TRAVERSE_DISTANCE}</dd>
           </div>
           <div className="rounded-xl border border-hud/15 bg-midnight/40 p-3">
-            <dt className="text-[9px] uppercase tracking-[0.24em] text-hud/75">Region</dt>
+            <dt className="text-[9px] uppercase tracking-[0.24em] text-hud/75">{t('Region')}</dt>
             <dd className="mt-1 text-sm font-semibold text-frost">Meridiani Planum</dd>
           </div>
         </dl>

@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 import { OrbitalCapsuleButton } from '../orbital-capsule-button'
+import { useGameSettings } from '../settings-provider'
 import {
   OPPORTUNITY_CONTEXT,
   OPPORTUNITY_FACTS,
@@ -20,6 +21,7 @@ type MissionDossierProps = {
 }
 
 export function MissionDossier({ onBack, onExplore, onBegin }: MissionDossierProps) {
+  const { t } = useGameSettings()
   const headingRef = useRef<HTMLHeadingElement>(null)
   useEffect(() => headingRef.current?.focus(), [])
 
@@ -30,8 +32,8 @@ export function MissionDossier({ onBack, onExplore, onBegin }: MissionDossierPro
       style={{ '--tone': '#ff9a3d' } as React.CSSProperties}
     >
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-ember/20 px-5 py-3 sm:px-7">
-        <BackChip label="Archives" onClick={onBack} />
-        <p className="text-[10px] font-semibold tracking-[0.32em] text-ember">MISSION 01 · DOSSIER</p>
+        <BackChip label={t('Archives')} onClick={onBack} />
+        <p className="text-[10px] font-semibold tracking-[0.32em] text-ember">{t('MISSION 01 · DOSSIER')}</p>
       </header>
 
       <div className="arc-scroll grid min-h-0 flex-1 gap-6 overflow-y-auto p-5 sm:p-7 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
@@ -45,7 +47,7 @@ export function MissionDossier({ onBack, onExplore, onBegin }: MissionDossierPro
               className="object-cover"
             />
             <span className="absolute bottom-2 left-2 rounded-full bg-navy/80 px-2.5 py-1 text-[9px] tracking-[0.2em] text-frost/70">
-              ARTISTIC RENDER
+              {t('ARTISTIC RENDER')}
             </span>
           </div>
           <div>
@@ -62,14 +64,14 @@ export function MissionDossier({ onBack, onExplore, onBegin }: MissionDossierPro
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-hud/20 bg-hud/15">
             {OPPORTUNITY_FACTS.map((f) => (
               <div key={f.label} className="bg-navy/85 p-3">
-                <dt className="text-[9px] font-semibold uppercase tracking-[0.24em] text-hud/75">{f.label}</dt>
+                <dt className="text-[9px] font-semibold uppercase tracking-[0.24em] text-hud/75">{t(f.label)}</dt>
                 <dd className="mt-1 text-sm font-semibold text-frost">{f.value}</dd>
               </div>
             ))}
           </dl>
           <div className="flex flex-col gap-3 pt-1">
             <OrbitalCapsuleButton
-              label="Explore Archive"
+              label={t('Explore Archive')}
               sound="archives"
               width="100%"
               height="50px"
@@ -77,7 +79,7 @@ export function MissionDossier({ onBack, onExplore, onBegin }: MissionDossierPro
               onActivate={onExplore}
             />
             <OrbitalCapsuleButton
-              label="Begin Investigation"
+              label={t('Begin Investigation')}
               tone="amber"
               emphasis="primary"
               sound="start"
@@ -90,45 +92,45 @@ export function MissionDossier({ onBack, onExplore, onBegin }: MissionDossierPro
         </div>
 
         <div className="flex flex-col gap-6 text-sm leading-relaxed text-frost/85">
-          <DossierBlock title="Mission overview" source="history">
-            <p className="text-pretty">{OPPORTUNITY_OVERVIEW}</p>
+          <DossierBlock title={t('Mission overview')} source="history">
+            <p className="text-pretty">{t(OPPORTUNITY_OVERVIEW)}</p>
           </DossierBlock>
 
-          <DossierBlock title="Mission objectives" source="history">
+          <DossierBlock title={t('Mission objectives')} source="history">
             <ul className="flex flex-col gap-2">
               {OPPORTUNITY_OBJECTIVES.map((o) => (
                 <li key={o} className="flex gap-3">
                   <span aria-hidden className="mt-2 size-1.5 shrink-0 rounded-full bg-ember" />
-                  <span>{o}</span>
+                  <span>{t(o)}</span>
                 </li>
               ))}
             </ul>
           </DossierBlock>
 
-          <DossierBlock title="Rover" source="history">
+          <DossierBlock title={t('Rover')} source="history">
             <dl className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
               {OPPORTUNITY_ROVER.map((r) => (
                 <div key={r.label}>
-                  <dt className="text-[10px] uppercase tracking-[0.2em] text-frost/50">{r.label}</dt>
-                  <dd className="text-frost">{r.value}</dd>
+                  <dt className="text-[10px] uppercase tracking-[0.2em] text-frost/50">{t(r.label)}</dt>
+                  <dd className="text-frost">{t(r.value)}</dd>
                 </div>
               ))}
             </dl>
           </DossierBlock>
 
-          <DossierBlock title="Instruments" source="history">
+          <DossierBlock title={t('Instruments')} source="history">
             <ul className="grid gap-2 sm:grid-cols-2">
               {OPPORTUNITY_INSTRUMENTS.map((i) => (
                 <li key={i.name} className="rounded-xl border border-hud/15 bg-midnight/50 p-3">
                   <p className="font-semibold tracking-[0.06em] text-frost">{i.name}</p>
-                  <p className="mt-0.5 text-xs text-frost/65">{i.detail}</p>
+                  <p className="mt-0.5 text-xs text-frost/65">{t(i.detail)}</p>
                 </li>
               ))}
             </ul>
           </DossierBlock>
 
-          <DossierBlock title="Historical context" source="history">
-            <p className="text-pretty">{OPPORTUNITY_CONTEXT}</p>
+          <DossierBlock title={t('Historical context')} source="history">
+            <p className="text-pretty">{t(OPPORTUNITY_CONTEXT)}</p>
           </DossierBlock>
 
           <DossierBlock title="The Last Signal" source="fiction">
