@@ -29,6 +29,7 @@ export function ArchivesScreen({ onBack, onBeginInvestigation }: ArchivesScreenP
   const [view, setView] = useState<View>('select')
   const [focus, setFocus] = useState(false)
   const [section, setSection] = useState<SectionId | null>(null)
+  const [selectedMissionId, setSelectedMissionId] = useState<(typeof MISSIONS)[number]['id']>('opportunity')
   const [mobileIndex, setMobileIndex] = useState(1)
   const focusTimer = useRef<number>(0)
 
@@ -123,6 +124,7 @@ export function ArchivesScreen({ onBack, onBeginInvestigation }: ArchivesScreenP
                     baseRotate={rotate}
                     onBegin={() => {
                       play('archives')
+                      setSelectedMissionId(m.id)
                       openDossier()
                     }}
                     className={cn(
@@ -145,6 +147,7 @@ export function ArchivesScreen({ onBack, onBeginInvestigation }: ArchivesScreenP
         <div className="absolute inset-0 z-20 flex p-3 sm:p-6 lg:p-10">
           {view === 'dossier' && (
             <MissionDossier
+              missionId={selectedMissionId}
               onBack={backToSelect}
               onExplore={() => setView('archive')}
               onBegin={onBeginInvestigation}
@@ -261,7 +264,7 @@ function ArchiveBottomBar({ onBack }: { onBack: () => void }) {
         </div>
         <div>
           <p className="text-[11px] font-semibold tracking-[0.3em] text-frost">{t('ARCHIVE STATUS')}</p>
-          <p className="text-[9px] tracking-[0.24em] text-hud/80">{t('1 / 3 AVAILABLE')}</p>
+          <p className="text-[9px] tracking-[0.24em] text-hud/80">{t('3 / 3 AVAILABLE')}</p>
         </div>
       </div>
     </div>

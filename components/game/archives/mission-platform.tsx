@@ -2,9 +2,7 @@
 
 import Image from 'next/image'
 import { useRef, useState, type CSSProperties } from 'react'
-import { Lock } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { OrbitalCapsuleButton } from '../orbital-capsule-button'
 import { useGameSettings } from '../settings-provider'
 import type { Mission } from './archive-data'
 
@@ -22,7 +20,7 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
   const { play, t } = useGameSettings()
   const cardRef = useRef<HTMLDivElement>(null)
   const [hot, setHot] = useState(false)
-  const tone = primary ? '#ff9a3d' : '#49d7ff'
+  const tone = hot ? '#ff9a3d' : '#49d7ff'
 
   const onMove = (e: React.PointerEvent) => {
     if (calm || e.pointerType !== 'mouse') return
@@ -56,7 +54,17 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
           onPointerLeave={reset}
           onFocusCapture={() => setHot(true)}
           onBlurCapture={reset}
-          className="arc-card"
+          onClick={() => onBegin?.()}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              onBegin?.()
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label={`${mission.name} mission dossier`}
+          className="arc-card cursor-pointer rounded-[22px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-300"
           style={{ '--tone': tone, '--base-ry': `${baseRotate}deg` } as CSSProperties}
         >
           <article
@@ -71,7 +79,7 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
             <p
               className={cn(
                 'text-[clamp(9px,1.3vh,12px)] font-semibold tracking-[0.3em]',
-                primary ? 'text-ember' : 'text-frost/60',
+                hot ? 'text-ember' : 'text-hud/75',
               )}
             >
               {t(mission.index)}
@@ -81,8 +89,9 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
               className={cn(
                 'mt-1 font-display uppercase leading-none text-frost',
                 primary
-                  ? 'text-[clamp(22px,4.6vh,42px)] tracking-[0.08em] [text-shadow:0_0_24px_rgba(255,154,61,0.35)]'
+                  ? 'text-[clamp(22px,4.6vh,42px)] tracking-[0.08em]'
                   : 'text-[clamp(16px,3vh,26px)] tracking-[0.1em]',
+                hot && '[text-shadow:0_0_24px_rgba(255,154,61,0.45)]',
               )}
             >
               {mission.name}
@@ -90,7 +99,7 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
             <p
               className={cn(
                 'mt-1.5 text-[clamp(10px,1.5vh,14px)] italic tracking-[0.18em]',
-                primary ? 'text-hud' : 'text-frost/50',
+                hot ? 'text-ember' : 'text-frost/55',
               )}
             >
               {mission.site} · {mission.body}
@@ -105,44 +114,26 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
                 className={cn(
                   'object-cover transition-transform duration-[1200ms] ease-out',
                   hot && 'scale-[1.04]',
-                  !primary && 'grayscale-[0.5] saturate-[0.7]',
                 )}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#060c14] via-transparent to-transparent" />
             </div>
 
-            {primary ? (
-              <>
-                <p className="mt-[clamp(8px,1.6vh,14px)] line-clamp-3 text-pretty text-[clamp(11px,1.65vh,14px)] leading-relaxed text-frost/85 [@media(max-height:640px)]:line-clamp-2">
-                  {t(mission.blurb ?? '')}
-                </p>
-                <div className="mt-[clamp(10px,1.8vh,18px)] flex justify-center">
-                  <OrbitalCapsuleButton
-                    label={t('Begin Mission')}
-                    tone="amber"
-                    emphasis="primary"
-                    sound="start"
-                    width="min(100%, 340px)"
-                    height="clamp(40px, 6.4vh, 54px)"
-                    phase={0.1}
-                    onActivate={() => onBegin?.()}
-                  />
-                </div>
-              </>
+            {mission.blurb ? (
+              <p className="mt-[clamp(8px,1.6vh,14px)] line-clamp-3 text-pretty text-[clamp(11px,1.65vh,14px)] leading-relaxed text-frost/85 [@media(max-height:640px)]:line-clamp-2">
+                {t(mission.blurb)}
+              </p>
             ) : (
-              <div className="mt-[clamp(10px,2vh,18px)] flex flex-col items-center gap-2">
-                <div className="flex w-full items-center gap-3">
-                  <span className="h-px flex-1 bg-gradient-to-r from-transparent to-hud/40" />
-                  <span className="flex size-8 items-center justify-center rounded-full border border-hud/40 bg-navy/60">
-                    <Lock aria-hidden className="size-3.5 text-frost/80" />
-                  </span>
-                  <span className="h-px flex-1 bg-gradient-to-l from-transparent to-hud/40" />
-                </div>
-                <p className="text-[clamp(9px,1.3vh,11px)] font-semibold tracking-[0.34em] text-frost/70">
-                  {t('COMING SOON')}
-                </p>
-              </div>
+              <div className="mt-[clamp(8px,1.6vh,14px)] flex-1" aria-hidden="true" />
             )}
+            <div className="mt-[clamp(10px,1.8vh,18px)] flex justify-center">
+              <span className={cn(
+                'inline-flex min-h-[clamp(40px,6.4vh,54px)] w-full items-center justify-center rounded-full border px-4 text-[10px] font-semibold tracking-[0.24em] transition-[border-color,color,box-shadow,background-color] duration-500',
+                hot ? 'border-amber-300/80 bg-amber-300/10 text-amber-100 shadow-[0_0_24px_rgba(255,154,61,0.32)]' : 'border-hud/40 bg-navy/50 text-frost/75',
+              )}>
+                {t('Open mission dossier')}
+              </span>
+            </div>
           </article>
           <span aria-hidden className="arc-frame" />
           <span aria-hidden className="arc-frame-sweep" />
@@ -153,10 +144,10 @@ export function MissionPlatform({ mission, primary, delay, baseRotate = 0, calm,
         <span
           className="arc-pad-ring aspect-square w-full"
           style={{
-            background: `radial-gradient(closest-side, ${primary ? 'rgba(255,154,61,0.28)' : 'rgba(73,215,255,0.16)'}, transparent 70%)`,
-            border: `2px solid ${primary ? 'rgba(255,170,80,0.75)' : 'rgba(73,215,255,0.5)'}`,
-            boxShadow: `0 0 ${hot ? 60 : 34}px ${primary ? 'rgba(255,154,61,0.7)' : 'rgba(73,215,255,0.45)'}, inset 0 0 40px ${primary ? 'rgba(255,154,61,0.4)' : 'rgba(73,215,255,0.25)'}`,
-            transition: 'box-shadow 0.6s ease',
+            background: `radial-gradient(closest-side, ${hot ? 'rgba(255,154,61,0.28)' : 'rgba(73,215,255,0.16)'}, transparent 70%)`,
+            border: `2px solid ${hot ? 'rgba(255,170,80,0.75)' : 'rgba(73,215,255,0.5)'}`,
+            boxShadow: `0 0 ${hot ? 60 : 34}px ${hot ? 'rgba(255,154,61,0.7)' : 'rgba(73,215,255,0.45)'}, inset 0 0 40px ${hot ? 'rgba(255,154,61,0.4)' : 'rgba(73,215,255,0.25)'}`,
+            transition: 'background 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease',
           }}
         />
         <span

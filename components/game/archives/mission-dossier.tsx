@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 import { OrbitalCapsuleButton } from '../orbital-capsule-button'
 import { useGameSettings } from '../settings-provider'
+import { MISSIONS, type MissionId } from './archive-data'
 import {
   OPPORTUNITY_CONTEXT,
   OPPORTUNITY_FACTS,
@@ -15,15 +16,21 @@ import {
 import { BackChip, SourceTag } from './archive-ui'
 
 type MissionDossierProps = {
+  missionId: MissionId
   onBack: () => void
   onExplore: () => void
   onBegin: () => void
 }
 
-export function MissionDossier({ onBack, onExplore, onBegin }: MissionDossierProps) {
+export function MissionDossier({ missionId, onBack, onExplore, onBegin }: MissionDossierProps) {
   const { t } = useGameSettings()
   const headingRef = useRef<HTMLHeadingElement>(null)
   useEffect(() => headingRef.current?.focus(), [])
+
+  if (missionId !== 'opportunity') {
+    const mission = MISSIONS.find((item) => item.id === missionId)!
+    return <PlaceholderMissionDossier mission={mission} onBack={onBack} />
+  }
 
   return (
     <section
@@ -138,6 +145,55 @@ export function MissionDossier({ onBack, onExplore, onBegin }: MissionDossierPro
               Years after the mission ended, the fictional research station Outpost M-07 detects a faint echo on a
               frequency once used by the rover. Your investigation begins here.
             </p>
+          </DossierBlock>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PlaceholderMissionDossier({
+  mission,
+  onBack,
+}: {
+  mission: (typeof MISSIONS)[number]
+  onBack: () => void
+}) {
+  const { t } = useGameSettings()
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  useEffect(() => headingRef.current?.focus(), [])
+
+  return (
+    <section
+      aria-labelledby="dossier-title"
+      className="arc-panel-in arc-glass relative mx-auto flex h-full w-full max-w-6xl flex-col overflow-hidden"
+      style={{ '--tone': '#ff9a3d' } as React.CSSProperties}
+    >
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-ember/20 px-5 py-3 sm:px-7">
+        <BackChip label={t('Archives')} onClick={onBack} />
+        <p className="text-[10px] font-semibold tracking-[0.32em] text-ember">{t(`${mission.index} · DOSSIER`)}</p>
+      </header>
+      <div className="arc-scroll grid min-h-0 flex-1 gap-6 overflow-y-auto p-5 sm:p-7 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <div className="flex flex-col gap-4">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-ember/30">
+            <Image src={mission.image} alt={mission.imageAlt} fill sizes="(min-width: 768px) 440px, 90vw" className="object-cover" />
+            <span className="absolute bottom-2 left-2 rounded-full bg-navy/80 px-2.5 py-1 text-[9px] tracking-[0.2em] text-frost/70">
+              {t('ARTISTIC RENDER')}
+            </span>
+          </div>
+          <div>
+            <h2 id="dossier-title" ref={headingRef} tabIndex={-1} className="font-display text-[clamp(24px,4vw,40px)] uppercase leading-none tracking-[0.08em] text-frost outline-none">
+              {mission.name}
+            </h2>
+            <p className="mt-2 text-sm italic tracking-[0.18em] text-hud">{mission.site} · {mission.body}</p>
+          </div>
+        </div>
+        <div className="flex flex-col gap-6 text-sm leading-relaxed text-frost/85">
+          <DossierBlock title={t('Mission dossier')} source="fiction">
+            <p>{t('Mission content has not been integrated yet.')}</p>
+          </DossierBlock>
+          <DossierBlock title={t('Mission details')} source="fiction">
+            <p>{t('Verified mission information and scientific data are pending integration.')}</p>
           </DossierBlock>
         </div>
       </div>
