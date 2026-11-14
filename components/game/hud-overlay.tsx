@@ -41,17 +41,6 @@ export function HudOverlay() {
       ))}
 
       <div
-        className="intro-el absolute left-7 top-7 hidden flex-col gap-1 sm:left-10 sm:top-10 md:flex"
-        style={hudIntro('1.15s')}
-      >
-        <p className="text-[11px] font-semibold tracking-[0.32em] text-frost/85">OUTPOST M-07</p>
-        <p className="flex items-center gap-2 text-[10px] tracking-[0.28em] text-hud/75">
-          <span aria-hidden className="beacon inline-block size-1.5 rounded-full bg-hud" />
-          MARS INVESTIGATION · ONLINE
-        </p>
-      </div>
-
-      <div
         className="intro-el absolute right-7 top-7 flex flex-col items-end gap-1.5 sm:right-10 sm:top-10"
         style={hudIntro('1.25s')}
       >
@@ -86,12 +75,6 @@ export function HudOverlay() {
         </button>
       </div>
 
-      <p
-        className="intro-el absolute bottom-8 right-7 hidden text-[10px] tracking-[0.28em] text-hud/60 sm:bottom-11 sm:right-10 sm:block"
-        style={hudIntro('1.4s')}
-      >
-        PROTOTYPE BUILD 0.1 · SIMULATED DATA
-      </p>
     </div>
   )
 }
